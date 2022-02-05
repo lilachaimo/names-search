@@ -1,9 +1,9 @@
-public class LineDetailes {
+public class LineDetails {
 
-    private String line;
-    private int lineIndex;
+    private final String line;
+    private  final int lineIndex;
 
-    public LineDetailes(String line, int lineIndex) {
+    public LineDetails(String line, int lineIndex) {
         this.line = line;
         this.lineIndex = lineIndex;
     }

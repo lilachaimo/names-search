@@ -1,4 +1,5 @@
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,7 +12,7 @@ public class Reader {
     Set<String> dictionary;
     FileInputStream fileInputStream;
     private ExecutorService executorService;
-    private  final List<HashMap<String, List<String>>> results = new ArrayList<>();
+    private final List<HashMap<String, List<String>>> results = new ArrayList<>();
 
     public Reader(Set<String> dictionary, FileInputStream inputStream) {
         this.dictionary = dictionary;
@@ -19,7 +20,7 @@ public class Reader {
     }
 
     public void process() throws Exception {
-// Create a thread pool for available proccessors
+        // Create a thread pool for available processors
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         // Match words
@@ -41,49 +42,41 @@ public class Reader {
 
 
 
-        Scanner sc = null;
+        Scanner sc = new Scanner(fileInputStream, StandardCharsets.UTF_8);
 
+        int lineNumber = 1;
+        int blockNumber = 0;
+        List<LineDetails> list = new ArrayList<>();
 
-
-
-            sc = new Scanner(fileInputStream,"UTF-8");
-
-            int lineNumber = 1;
-            int blockNumber = 0;
-            List<LineDetailes> list = new ArrayList<>();
-
-            while(sc.hasNextLine()){
-                if( lineNumber <  MAX_LINE_COUNT) {
-                    LineDetailes lineDetailes = new LineDetailes(sc.nextLine(), (lineNumber + blockNumber * MAX_LINE_COUNT));
-                    list.add(lineDetailes);
-                    lineNumber++;
-                }else{
-                    matchWordsInBlock(list, (lineNumber + blockNumber * MAX_LINE_COUNT));
-                    list = new ArrayList<>();
-                    blockNumber ++;
-                    lineNumber = 0;
-                }
-
-
-
+        while (sc.hasNextLine()) {
+            if (lineNumber < MAX_LINE_COUNT) {
+                LineDetails lineDetails = new LineDetails(sc.nextLine(), (lineNumber + blockNumber * MAX_LINE_COUNT));
+                list.add(lineDetails);
+                lineNumber++;
+            } else {
+                matchWordsInBlock(list);
+                list = new ArrayList<>();
+                blockNumber++;
+                lineNumber = 0;
+            }
 
 
         }
-        matchWordsInBlock(list, (lineNumber + blockNumber * MAX_LINE_COUNT));
+        matchWordsInBlock(list);
         return results;
 
 
     }
 
-    private void matchWordsInBlock(List<LineDetailes> input, Integer chunkNumber) throws Exception {
-        Matcher matcher = new Matcher(input, dictionary, chunkNumber);
-
+    private void matchWordsInBlock(List<LineDetails> input) throws Exception {
+        Matcher matcher = new Matcher(input, dictionary);
         Future<HashMap<String, List<String>>> futures = executorService.submit(matcher);
         results.add(new HashMap<>(futures.get()));
     }
-    public void print(HashMap<String, List<String>> wordVslocations) {
-        for (Map.Entry<String, List<String>> entry : wordVslocations.entrySet()) {
-            System.out.print(entry.getKey() + " --> [" +String.join(", ",entry.getValue())+"]");
+
+    public void print(HashMap<String, List<String>> wordLocations) {
+        for (Map.Entry<String, List<String>> entry : wordLocations.entrySet()) {
+            System.out.print(entry.getKey() + " --> [" + String.join(", ", entry.getValue()) + "]");
             System.out.println("\n");
         }
     }
