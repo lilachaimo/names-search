@@ -4,63 +4,33 @@ import java.util.concurrent.Callable;
 
 public class Matcher implements Callable<HashMap<String, List<String>>> {
 
-    private List<LineDetailes> input;
+    private final List<LineDetails> input;
 
-    private int lineNumber;
-    private Set<String> dictionary;
+
+    private final Set<String> dictionary;
 
     private HashMap<String, List<String>> result;
 
 
 
-    public Matcher (List<LineDetailes> input, Set<String> dictionary, int lineNumber){
+    public Matcher (List<LineDetails> input, Set<String> dictionary){
         this.input = input;
         this.dictionary = dictionary;
-        this.lineNumber = lineNumber;
-
 
     }
 
-    public void createNamesMap(){
-        //create map
-        //put words to the map
-        //aggregator.add(map);
 
-       /*dictionary.forEach(name -> {
-           result = new ConcurrentHashMap<>();
-           input.forEach( line -> {
-                   List<String> matches = getMatchesByLineAndWord(line, name);
-               if (!matches.isEmpty()) {
-                   if(!result.containsKey(name))
-                       result.put(name, new ArrayList<>());
 
-               result.get(name).add("[" + String.join(",", matches) + "]");
-                  // print(result);
-               }
 
-           });
-      //     print(result);
-       });
-        return result;
-      //  aggregator.add(result);
-*/
-    }
 
-    public void print(HashMap<String, List<String>> wordVslocations) {
-        for (Map.Entry<String, List<String>> entry : wordVslocations.entrySet()) {
-            System.out.print(entry.getKey() + " --> [" +String.join(", ",entry.getValue())+"]");
-            System.out.println("\n");
-        }
-    }
-
-    private List<String> getMatchesByLineAndWord(LineDetailes lineDetailes, String name){
+    private List<String> getMatchesByLineAndWord(LineDetails lineDetails, String name){
         int charOffset = 0;
         int wordLength = 0;
         List<String> matches = new ArrayList<>();
         while (charOffset != -1) {
-            charOffset = lineDetailes.getLine().indexOf(name, charOffset + wordLength);
+            charOffset = lineDetails.getLine().indexOf(name, charOffset + wordLength);
             if (charOffset != -1) {
-                matches.add("[lineOffset=" + lineDetailes.getLineIndex() + ", charOffset=" + (charOffset + 1) + "]");
+                matches.add("[lineOffset=" + lineDetails.getLineIndex() + ", charOffset=" + (charOffset + 1) + "]");
             }
             wordLength = name.length();
         }
@@ -70,22 +40,22 @@ public class Matcher implements Callable<HashMap<String, List<String>>> {
 
 
     @Override
-    public HashMap<String, List<String>> call() throws Exception {
+    public HashMap<String, List<String>> call() {
 
         result = new HashMap<>();
         dictionary.forEach(name -> {
             input.forEach( line -> {
                 List<String> matches = getMatchesByLineAndWord(line, name);
-                if (matches.isEmpty() == false) {
-                    if(result.containsKey(name) == false)
+                if (!matches.isEmpty()) {
+                    if(!result.containsKey(name))
                         result.put(name, new ArrayList<>());
 
                     result.get(name).add("[" + String.join(",", matches) + "]");
-                    // print(result);
+
                 }
 
             });
-            //     print(result);
+
         });
         return result;
     }

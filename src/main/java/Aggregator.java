@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 
 public class Aggregator {
@@ -30,10 +30,5 @@ public class Aggregator {
         return wordVsLocations;
     }
 
-    /*public void print(){
-        for (Map.Entry<String, List<String>> entry : data.entrySet()) {
-            System.out.print(entry.getKey() + " --> [" +String.join(", ",entry.getValue())+"]");
-            System.out.println("\n");
-        }
-    }*/
+
 }
