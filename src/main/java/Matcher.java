@@ -14,7 +14,7 @@ public class Matcher implements Callable<HashMap<String, List<String>>> {
 
 
     public Matcher (List<LineDetails> input, Set<String> dictionary){
-        this.input = input;
+        this.input = List.copyOf(input);
         this.dictionary = dictionary;
 
     }
