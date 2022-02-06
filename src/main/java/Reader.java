@@ -54,6 +54,7 @@ public class Reader {
                 list.add(lineDetails);
                 lineNumber++;
             } else {
+                //The method that's start a new Thread
                 matchWordsInBlock(list);
                 list = new ArrayList<>();
                 blockNumber++;
@@ -62,6 +63,7 @@ public class Reader {
 
 
         }
+        //The method that's start a new Thread - for the last small(<1000) block
         matchWordsInBlock(list);
         return results;
 
