@@ -3,7 +3,8 @@ import java.util.HashSet;
 
 public class Constants {
 
-    public static final String FILE_LOCATION = "big.txt";
+    public static final String BIG_FILE = "big.txt";
+    public static final String SMALL_FILE = "small.txt";
 
     public static HashSet<String> getNamesToFind() {
 
