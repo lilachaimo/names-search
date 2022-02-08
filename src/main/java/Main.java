@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
-        File file = new File(Constants.FILE_LOCATION);
+        File file = new File(Constants.BIG_FILE);
          /*FileInputStream just opens the connection to the file to be read,
            be it images, characters, etc.
            It doesn’t particularly care what the file actually is,
