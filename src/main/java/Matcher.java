@@ -40,8 +40,9 @@ public class Matcher implements Callable<HashMap<String, List<String>>> {
 
 
     @Override
-    public HashMap<String, List<String>> call()  {
-        System.out.println("Current Thread ID- " + Thread.currentThread().getId());
+    public HashMap<String, List<String>> call() {
+        System.out.println("Start Current Thread ID- " + Thread.currentThread().getId());
+
 
         result = new HashMap<>();
         input.forEach( line -> {
@@ -58,7 +59,7 @@ public class Matcher implements Callable<HashMap<String, List<String>>> {
             });
 
         });
-        System.out.println("Current Thread ID- " + Thread.currentThread().getId());
+
 
         return result;
     }
